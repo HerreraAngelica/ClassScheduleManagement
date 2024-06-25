@@ -1,43 +1,67 @@
 ﻿using System;
 using System.Collections.Generic;
 using Model;
-using BusinessLayer;
+using DataLayer;
 
 namespace ClassScheduleManagement
 {
     public class Program
     {
-
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
+            
+            // SqlDbData.AddSchedule("Math", "Sunday");
+
+            SqlDbData.UpdateSchedule("Math", "Saturday");
+
+            // SqlDbData.DeleteSchedule("Math");
+
+           
             Console.Write("Enter a Day: ");
             string day = Console.ReadLine();
             DisplayScheduleForDay(day);
+
+           
+            Console.WriteLine();
+
+            
+            GetSchedules();
         }
 
-        public static void DisplayScheduleForDay(string stringDay)
+        public static void GetSchedules()
         {
-            Services businessServices = new Services();
-            List<Schedule> foundSchedules = businessServices.GetSchedulesByDay(stringDay);
+            List<Schedule> schedulesFromDB = SqlDbData.GetSchedules();
+            HashSet<string> uniqueSchedules = new HashSet<string>();
 
-            if (foundSchedules.Count > 0)
+            foreach (var item in schedulesFromDB)
             {
-                Console.WriteLine($"Found schedule for {stringDay}(s):");
-
-                for (int i = 0; i < foundSchedules.Count; i++)
+                string scheduleEntry = $"Class: {item.Class}, Day: {item.Day}";
+                if (uniqueSchedules.Add(scheduleEntry)) 
                 {
-                    Console.WriteLine($"Class: {foundSchedules[i].Class}");
-                    Console.WriteLine($"Day: {foundSchedules[i].Day}");
-                    Console.WriteLine($"Subject: {foundSchedules[i].Subject}");
-                    Console.WriteLine($"Time: {foundSchedules[i].Time}");
-                    Console.WriteLine($"Professor: {foundSchedules[i].Professor}");
-                    Console.WriteLine();
+                    Console.WriteLine(scheduleEntry);
                 }
+            }
+        }
+
+        public static void DisplayScheduleForDay(string day)
+        {
+            List<Schedule> schedulesForDay = SqlDbData.GetSchedulesForDay(day);
+
+            if (schedulesForDay.Count == 0)
+            {
+                Console.WriteLine($"No schedules found for {day}");
             }
             else
             {
-                Console.WriteLine("No classes scheduled for the specified day.");
-
+                HashSet<string> uniqueSchedules = new HashSet<string>();
+                foreach (var item in schedulesForDay)
+                {
+                    string scheduleEntry = $"Class: {item.Class}, Day: {item.Day}";
+                    if (uniqueSchedules.Add(scheduleEntry)) 
+                    {
+                        Console.WriteLine(scheduleEntry);
+                    }
+                }
             }
         }
     }
