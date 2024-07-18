@@ -1,5 +1,6 @@
 ﻿using DataLayer;
 using Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,13 +10,10 @@ namespace BusinessLayer
     {
         private ScheduleData scheduleData;
 
-
-        private readonly DataServices _dataServices;
-
         public Services()
         {
             scheduleData = new ScheduleData();
-            _dataServices = new DataServices();
+     
         }
 
         public List<Schedule> GetSchedules()
@@ -23,24 +21,31 @@ namespace BusinessLayer
             return scheduleData.GetSchedules();
         }
 
-        public List<Schedule> GetSchedulesByDay(string inputDay)
+        //public List<Schedule> GetSchedulesByDay(string inputDay)
+        //{
+        //    return _dataServices.schedules.Where(schedule => schedule.Day == inputDay).ToList();
+        //}
+
+        public bool AddSchedule(string Class, string Day, string Subject, string Time, string Professor)
         {
-            return _dataServices.schedules.Where(schedule => schedule.Day == inputDay).ToList();
+            return scheduleData.AddSchedules(Class, Day, Subject, Time, Professor);
         }
 
-        public void AddSchedule(Schedule schedule)
+        //public void AddSchedule(Schedule schedule)
+        //{
+        //    _dataServices.AddSchedule(schedule);
+        //}
+
+        //public void DeleteSchedule(Schedule deleteschedule)
+        //{
+        //    _dataServices.DeleteSchedule(deleteschedule);
+        //}
+
+        public bool DeleteSchedule(string Class, string day, string Subject, string Professor)
         {
-            _dataServices.AddSchedule(schedule);
+            return scheduleData.DeleteSchedules(Class, day, Subject, Professor);
         }
 
-        public void DeleteSchedule(Schedule deleteschedule)
-        {
-            _dataServices.DeleteSchedule(deleteschedule);
-        }
 
-        public void UpdateSchedule(Schedule updatedSchedule)
-        {
-            _dataServices.UpdateSchedule(updatedSchedule);
-        }
     }
 }

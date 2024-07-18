@@ -2,6 +2,7 @@
 using ClassScheduleManagementAPI;
 using Microsoft.AspNetCore.Mvc;
 using Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -42,35 +43,38 @@ namespace ClassSchedManagementAPI.Controllers
             return classSchedules;
         }
 
-        [HttpGet]
-        [Route("day/{day}")]
-        public IEnumerable<Schedule> GetSchedulesByDay(string day)
-        {
-            return _services.GetSchedulesByDay(day);
-        }
+        //[HttpGet]
+        //[Route("day/{day}")]
+        //public IEnumerable<Schedule> GetSchedulesByDay(string day)
+        //{
+        //    return _services.GetSchedulesByDay(day);
+        //}
 
-        [HttpPost]
-        [Route("add")]
-        public IActionResult AddSchedule(Schedule schedule)
-        {
-            _services.AddSchedule(schedule);
-            return Ok(new { Message = "Schedule added successfully" });
-        }
 
-        [HttpDelete]
-        [Route("delete")]
-        public IActionResult DeleteSchedule(Schedule schedule)
-        {
-            _services.DeleteSchedule(schedule);
-            return Ok(new { Message = "Schedule deleted successfully" });
-        }
+       [HttpDelete("DeleteSchedule")]
+public JsonResult DeleteSchedule(Schedule Sched)
+{
+    var result = _services.DeleteSchedule(Sched.Class, Sched.Subject, Sched.Day, Sched.Professor);
 
-        [HttpPatch]
-        [Route("update")]
-        public IActionResult UpdateSchedule(Schedule updatedSchedule)
+    return new JsonResult(result);
+}
+
+        //[HttpPatch]
+        //[Route("update")]
+        //public IActionResult UpdateSchedule(Schedule updatedSchedule)
+        //{
+        //    _services.UpdateSchedule(updatedSchedule);
+        //    return Ok(new { Message = $"Schedule updated successfully" });
+        //}
+
+
+        [HttpPost("AddSchedule")]
+        public JsonResult AddSchedule(ClassSchedule Sched)
         {
-            _services.UpdateSchedule(updatedSchedule);
-            return Ok(new { Message = $"Schedule updated successfully" });
+            var result = _services.AddSchedule(Sched.Class, Sched.Day, Sched.Subject, Sched.Time, Sched.Professor);
+
+            return new JsonResult(result);
         }
     }
+
 }

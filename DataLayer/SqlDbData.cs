@@ -10,15 +10,16 @@ namespace DataLayer
 {
     public class SqlDbData
     {
-         string connectionString = "Data Source=ANGELICA\\SQLEXPRESS02; Initial Catalog=ClassScheduleManagementSystem; Integrated Security=True;";
+        string connectionString = "Data Source=ANGELICA\\SQLEXPRESS02; Initial Catalog=ClassScheduleManagementSystem; Integrated Security=True;";
         SqlConnection sqlConnection;
 
-        public  void Connect()
+
+        public SqlDbData()
         {
-            sqlConnection.Open();
+            sqlConnection = new SqlConnection(connectionString);
         }
 
-        public  List<Schedule> GetSchedules()
+        public List<Schedule> GetSchedules()
         {
             string selectStatement = "SELECT * FROM Class";
             SqlCommand selectCommand = new SqlCommand(selectStatement, sqlConnection);
@@ -35,7 +36,7 @@ namespace DataLayer
                 string Subject = reader["Subject"].ToString();
                 string Time = reader["Time"].ToString();
                 string Professor = reader["Professor"].ToString();
-               
+
 
                 Schedule readUser = new Schedule();
                 readUser.Class = Class;
@@ -43,33 +44,6 @@ namespace DataLayer
                 readUser.Subject = Subject;
                 readUser.Time = Time;
                 readUser.Professor = Professor;
-               
-                sched.Add(readUser);
-            }
-
-            sqlConnection.Close();
-            return sched;
-        }
-
-        public  List<Schedule> GetSchedulesForDay(string day)
-        {
-            string selectStatement = "SELECT Class, Day FROM Class WHERE Day = @Day";
-            SqlCommand selectCommand = new SqlCommand(selectStatement, sqlConnection);
-
-            selectCommand.Parameters.AddWithValue("@Day", day);
-            sqlConnection.Open();
-            SqlDataReader reader = selectCommand.ExecuteReader();
-
-            List<Schedule> sched = new List<Schedule>();
-
-            while (reader.Read())
-            {
-                string Class = reader["Class"].ToString();
-                string Day = reader["Day"].ToString();
-
-                Schedule readUser = new Schedule();
-                readUser.Class = Class;
-                readUser.Day = Day;
 
                 sched.Add(readUser);
             }
@@ -78,46 +52,87 @@ namespace DataLayer
             return sched;
         }
 
-        public  int AddSchedule(string Class, string Day)
+        public void AddSchedule(string Class, string Day, string Subject, string Time, string Professor)
         {
-            int success;
-
-            string insertStatement = "INSERT INTO Class (Class, Day) VALUES (@Class, @Day)";
+            string insertStatement = "INSERT INTO Class (Class, Day, Subject, Time, Professor) VALUES (@Class, @Day, @Subject, @Time, @Professor)";
             SqlCommand insertCommand = new SqlCommand(insertStatement, sqlConnection);
 
             insertCommand.Parameters.AddWithValue("@Class", Class);
             insertCommand.Parameters.AddWithValue("@Day", Day);
+            insertCommand.Parameters.AddWithValue("@Subject", Subject);
+            insertCommand.Parameters.AddWithValue("@Time", Time);
+            insertCommand.Parameters.AddWithValue("@Professor", Professor);
+
             sqlConnection.Open();
 
-            success = insertCommand.ExecuteNonQuery();
+            insertCommand.ExecuteNonQuery();
             sqlConnection.Close();
 
-            return success;
         }
 
-        public  void UpdateSchedule(string Class, string Day)
+        public void DeleteSchedule(string Class, string Subject, string Professor)
         {
-            string updateStatement = "UPDATE Class SET Day = @Day WHERE Class = @Class";
-            SqlCommand updateCommand = new SqlCommand(updateStatement, sqlConnection);
-
-            updateCommand.Parameters.AddWithValue("@Class", Class);
-            updateCommand.Parameters.AddWithValue("@Day", Day);
-            sqlConnection.Open();
-
-            updateCommand.ExecuteNonQuery();
-            sqlConnection.Close();
-        }
-
-        public  void DeleteSchedule(string Class)
-        {
-            string deleteStatement = "DELETE FROM Class WHERE Class = @Class";
+            string deleteStatement = "DELETE FROM Class WHERE Class = @Class AND Subject = @Subject  AND Professor = @Professor";
             SqlCommand deleteCommand = new SqlCommand(deleteStatement, sqlConnection);
 
             deleteCommand.Parameters.AddWithValue("@Class", Class);
+            deleteCommand.Parameters.AddWithValue("@Subject", Subject);
+            deleteCommand.Parameters.AddWithValue("@Professor", Professor);
+
             sqlConnection.Open();
 
             deleteCommand.ExecuteNonQuery();
             sqlConnection.Close();
         }
+
+
+        public List<Schedule> GetSchedulesForDay(string Day, string Subject, string Professor)
+        {
+            string selectStatement = "SELECT * FROM Class WHERE Day = @Day AND Subject = @Subject AND Professor = @Professor";
+            SqlCommand selectCommand = new SqlCommand(selectStatement, sqlConnection);
+
+            selectCommand.Parameters.AddWithValue("@Day", Day);
+            selectCommand.Parameters.AddWithValue("@Subject", Subject);
+            selectCommand.Parameters.AddWithValue("@Professor", Professor);
+
+            sqlConnection.Open();
+            SqlDataReader reader = selectCommand.ExecuteReader();
+
+            List<Schedule> schedules = new List<Schedule>();
+
+            while (reader.Read())
+            {
+                Schedule schedule = new Schedule
+                {
+                    Class = reader["Class"].ToString(),
+                    Day = reader["Day"].ToString(),
+                    Subject = reader["Subject"].ToString(),
+                    Time = reader["Time"].ToString(),
+                    Professor = reader["Professor"].ToString()
+                };
+                schedules.Add(schedule);
+            }
+
+            sqlConnection.Close();
+            return schedules;
+        }
     }
+
+
+
+    //    public  void UpdateSchedule(string Class, string Day)
+    //    {
+    //        string updateStatement = "UPDATE Class SET Day = @Day WHERE Class = @Class";
+    //        SqlCommand updateCommand = new SqlCommand(updateStatement, sqlConnection);
+
+    //        updateCommand.Parameters.AddWithValue("@Class", Class);
+    //        updateCommand.Parameters.AddWithValue("@Day", Day);
+    //        sqlConnection.Open();
+
+    //        updateCommand.ExecuteNonQuery();
+    //        sqlConnection.Close();
+    //    }
+
+
+
 }
