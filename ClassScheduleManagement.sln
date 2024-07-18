@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Model", "Model\Model.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLayer", "SchedClass\BusinessLayer.csproj", "{7A8ED2D9-AA03-4B11-95B1-31F2B4C7D80C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataLayer", "DataLayer\DataLayer.csproj", "{02134CD2-8676-4C95-9D97-832D50EFD79A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataLayer", "DataLayer\DataLayer.csproj", "{02134CD2-8676-4C95-9D97-832D50EFD79A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassScheduleManagementAPI", "ClassScheduleManagementAPI\ClassScheduleManagementAPI.csproj", "{5DC860A1-8CE8-4D93-8B4C-4ADAD1BE8B66}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{02134CD2-8676-4C95-9D97-832D50EFD79A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02134CD2-8676-4C95-9D97-832D50EFD79A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02134CD2-8676-4C95-9D97-832D50EFD79A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DC860A1-8CE8-4D93-8B4C-4ADAD1BE8B66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DC860A1-8CE8-4D93-8B4C-4ADAD1BE8B66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DC860A1-8CE8-4D93-8B4C-4ADAD1BE8B66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DC860A1-8CE8-4D93-8B4C-4ADAD1BE8B66}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

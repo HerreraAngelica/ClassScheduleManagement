@@ -1,29 +1,46 @@
-﻿using System.Collections.Generic;
+﻿using DataLayer;
 using Model;
-using DataLayer;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BusinessLayer
 {
     public class Services
     {
-        DataServices dataServices = new DataServices();
+        private ScheduleData scheduleData;
+
+
+        private readonly DataServices _dataServices;
+
+        public Services()
+        {
+            scheduleData = new ScheduleData();
+            _dataServices = new DataServices();
+        }
+
         public List<Schedule> GetSchedules()
         {
-            return dataServices.schedules;
+            return scheduleData.GetSchedules();
         }
 
         public List<Schedule> GetSchedulesByDay(string inputDay)
         {
-            List<Schedule> found = new List<Schedule>();
-            foreach (Schedule schedule in dataServices.schedules)
-            {
-                if (schedule.Day == inputDay)
-                {
-                    found.Add(schedule);
-                }
-            }
-            return found;
+            return _dataServices.schedules.Where(schedule => schedule.Day == inputDay).ToList();
+        }
+
+        public void AddSchedule(Schedule schedule)
+        {
+            _dataServices.AddSchedule(schedule);
+        }
+
+        public void DeleteSchedule(Schedule deleteschedule)
+        {
+            _dataServices.DeleteSchedule(deleteschedule);
+        }
+
+        public void UpdateSchedule(Schedule updatedSchedule)
+        {
+            _dataServices.UpdateSchedule(updatedSchedule);
         }
     }
-
 }

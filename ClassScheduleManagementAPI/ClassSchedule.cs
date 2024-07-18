@@ -1,6 +1,6 @@
-﻿namespace Model
+namespace ClassScheduleManagementAPI
 {
-    public class Schedule
+    public class ClassSchedule
     {
         public string Class { get; set; }
         public string Day { get; set; }

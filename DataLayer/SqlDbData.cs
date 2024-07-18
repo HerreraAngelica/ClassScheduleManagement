@@ -10,17 +10,17 @@ namespace DataLayer
 {
     public class SqlDbData
     {
-        static string connectionString = "Data Source=ANGELICA\\SQLEXPRESS02; Initial Catalog=ClassScheduleManagementSystem; Integrated Security=True;";
-        static SqlConnection sqlConnection = new SqlConnection(connectionString);
+         string connectionString = "Data Source=ANGELICA\\SQLEXPRESS02; Initial Catalog=ClassScheduleManagementSystem; Integrated Security=True;";
+        SqlConnection sqlConnection;
 
-        public static void Connect()
+        public  void Connect()
         {
             sqlConnection.Open();
         }
 
-        public static List<Schedule> GetSchedules()
+        public  List<Schedule> GetSchedules()
         {
-            string selectStatement = "SELECT Class, Day FROM Class";
+            string selectStatement = "SELECT * FROM Class";
             SqlCommand selectCommand = new SqlCommand(selectStatement, sqlConnection);
 
             sqlConnection.Open();
@@ -32,11 +32,18 @@ namespace DataLayer
             {
                 string Class = reader["Class"].ToString();
                 string Day = reader["Day"].ToString();
+                string Subject = reader["Subject"].ToString();
+                string Time = reader["Time"].ToString();
+                string Professor = reader["Professor"].ToString();
+               
 
                 Schedule readUser = new Schedule();
                 readUser.Class = Class;
                 readUser.Day = Day;
-
+                readUser.Subject = Subject;
+                readUser.Time = Time;
+                readUser.Professor = Professor;
+               
                 sched.Add(readUser);
             }
 
@@ -44,7 +51,7 @@ namespace DataLayer
             return sched;
         }
 
-        public static List<Schedule> GetSchedulesForDay(string day)
+        public  List<Schedule> GetSchedulesForDay(string day)
         {
             string selectStatement = "SELECT Class, Day FROM Class WHERE Day = @Day";
             SqlCommand selectCommand = new SqlCommand(selectStatement, sqlConnection);
@@ -71,7 +78,7 @@ namespace DataLayer
             return sched;
         }
 
-        public static int AddSchedule(string Class, string Day)
+        public  int AddSchedule(string Class, string Day)
         {
             int success;
 
@@ -88,7 +95,7 @@ namespace DataLayer
             return success;
         }
 
-        public static void UpdateSchedule(string Class, string Day)
+        public  void UpdateSchedule(string Class, string Day)
         {
             string updateStatement = "UPDATE Class SET Day = @Day WHERE Class = @Class";
             SqlCommand updateCommand = new SqlCommand(updateStatement, sqlConnection);
@@ -101,7 +108,7 @@ namespace DataLayer
             sqlConnection.Close();
         }
 
-        public static void DeleteSchedule(string Class)
+        public  void DeleteSchedule(string Class)
         {
             string deleteStatement = "DELETE FROM Class WHERE Class = @Class";
             SqlCommand deleteCommand = new SqlCommand(deleteStatement, sqlConnection);

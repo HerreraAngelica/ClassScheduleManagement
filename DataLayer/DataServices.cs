@@ -90,9 +90,20 @@ namespace DataLayer
             schedules.Add(sched8);
         }
 
-        public object AddBSIESchedule()
+        public void AddSchedule(Schedule schedule)
         {
-            throw new NotImplementedException();
+          //  throw new NotImplementedException();
+        }
+
+        public void DeleteSchedule(Schedule deleteschedule)
+        {
+         //   throw new NotImplementedException();
+        }
+
+        public void UpdateSchedule(Schedule updatedSchedule)
+        {
+          //  throw new NotImplementedException();
         }
     }
-}
+    }
+
