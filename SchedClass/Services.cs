@@ -3,17 +3,17 @@ using Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 
 namespace BusinessLayer
 {
     public class Services
     {
-        private ScheduleData scheduleData;
+        private SqlDbData scheduleData;
 
         public Services()
         {
-            scheduleData = new ScheduleData();
-     
+            scheduleData = new SqlDbData();
         }
 
         public List<Schedule> GetSchedules()
@@ -21,31 +21,48 @@ namespace BusinessLayer
             return scheduleData.GetSchedules();
         }
 
-        //public List<Schedule> GetSchedulesByDay(string inputDay)
-        //{
-        //    return _dataServices.schedules.Where(schedule => schedule.Day == inputDay).ToList();
-        //}
+        public List<Schedule> GetSchedulesByDay(string inputDay)
+        {
+            return scheduleData.GetSchedulesForDay(inputDay, string.Empty, string.Empty);
+        }
 
         public bool AddSchedule(string Class, string Day, string Subject, string Time, string Professor)
         {
-            return scheduleData.AddSchedules(Class, Day, Subject, Time, Professor);
+            try
+            {
+                scheduleData.AddSchedule(Class, Day, Subject, Time, Professor);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
-        //public void AddSchedule(Schedule schedule)
-        //{
-        //    _dataServices.AddSchedule(schedule);
-        //}
-
-        //public void DeleteSchedule(Schedule deleteschedule)
-        //{
-        //    _dataServices.DeleteSchedule(deleteschedule);
-        //}
-
-        public bool DeleteSchedule(string Class, string day, string Subject, string Professor)
+        public bool DeleteSchedule(string Class, string Subject, string Professor)
         {
-            return scheduleData.DeleteSchedules(Class, day, Subject, Professor);
+            try
+            {
+                scheduleData.DeleteSchedule(Class, Subject, Professor);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
-
+        public bool UpdateSchedule(string Class, string Day, string Subject, string Time, string Professor)
+        {
+            try
+            {
+                scheduleData.UpdateSchedule(Class, Day, Subject, Time, Professor);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }

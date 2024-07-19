@@ -2,15 +2,13 @@
 using ClassScheduleManagementAPI;
 using Microsoft.AspNetCore.Mvc;
 using Model;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ClassSchedManagementAPI.Controllers
 {
     [ApiController]
     [Route("api/schedule")]
-    public class ScheduleController : ControllerBase
+    public class ScheduleController : Controller
     {
         private readonly Services _services;
 
@@ -19,10 +17,7 @@ namespace ClassSchedManagementAPI.Controllers
             _services = new Services();
         }
 
-      
-
-        [HttpGet]
-        [Route("classSchedules")]
+        [HttpGet("classSchedules")]
         public IEnumerable<ClassSchedule> GetClassSchedules()
         {
             var schedules = _services.GetSchedules();
@@ -43,38 +38,49 @@ namespace ClassSchedManagementAPI.Controllers
             return classSchedules;
         }
 
-        //[HttpGet]
-        //[Route("day/{day}")]
-        //public IEnumerable<Schedule> GetSchedulesByDay(string day)
-        //{
-        //    return _services.GetSchedulesByDay(day);
-        //}
+        [HttpDelete("DeleteSchedule")]
+        public IActionResult DeleteSchedule([FromQuery] string className, [FromQuery] string subject, [FromQuery] string professor)
+        {
+            var result = _services.DeleteSchedule(className, subject, professor);
 
+            if (result)
+            {
+                return Ok(new { Success = true });
+            }
+            else
+            {
+                return NotFound(new { Success = false, Message = "Schedule not found" });
+            }
+        }
 
-       [HttpDelete("DeleteSchedule")]
-public JsonResult DeleteSchedule(Schedule Sched)
-{
-    var result = _services.DeleteSchedule(Sched.Class, Sched.Subject, Sched.Day, Sched.Professor);
+        [HttpPatch("UpdateSchedule")]
+        public IActionResult UpdateSchedule([FromBody] ClassSchedule sched)
+        {
+            var result = _services.UpdateSchedule(sched.Class, sched.Day, sched.Subject, sched.Time, sched.Professor);
 
-    return new JsonResult(result);
-}
-
-        //[HttpPatch]
-        //[Route("update")]
-        //public IActionResult UpdateSchedule(Schedule updatedSchedule)
-        //{
-        //    _services.UpdateSchedule(updatedSchedule);
-        //    return Ok(new { Message = $"Schedule updated successfully" });
-        //}
-
+            if (result)
+            {
+                return Ok(new { Success = true });
+            }
+            else
+            {
+                return BadRequest(new { Success = false, Message = "Failed to update schedule" });
+            }
+        }
 
         [HttpPost("AddSchedule")]
-        public JsonResult AddSchedule(ClassSchedule Sched)
+        public IActionResult AddSchedule([FromBody] ClassSchedule sched)
         {
-            var result = _services.AddSchedule(Sched.Class, Sched.Day, Sched.Subject, Sched.Time, Sched.Professor);
+            var result = _services.AddSchedule(sched.Class, sched.Day, sched.Subject, sched.Time, sched.Professor);
 
-            return new JsonResult(result);
+            if (result)
+            {
+                return Ok(new { Success = true });
+            }
+            else
+            {
+                return BadRequest(new { Success = false, Message = "Failed to add schedule" });
+            }
         }
     }
-
 }

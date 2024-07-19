@@ -1,36 +1,100 @@
+using BusinessLayer;
+using System;
+using System.Collections.Generic;
+using Model;
+using DataLayer;
 
-namespace ClassScheduleManagementAPI
+namespace ClassScheduleManagement
 {
     public class Program
     {
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
+            Services services = new Services();
+            List<Schedule> schedules = services.GetSchedules();
 
-            // Add services to the container.
+            Console.WriteLine("");
+            Console.WriteLine("---------------------------------------------------------");
+            Console.WriteLine(">>>>>>>>BSIT 2-1 CLASS SCHEDULE MANAGEMENT SYSTEM<<<<<<<<");
+            Console.WriteLine("---------------------------------------------------------");
+            Console.WriteLine("");
+            Console.WriteLine("Enter a number: ");
+            Console.WriteLine("1. Display Schedule ");
+            Console.WriteLine("2. Add Schedule ");
+            Console.WriteLine("3. Delete Schedule ");
+            Console.WriteLine("");
+            Console.WriteLine("---------------------------------------------------------");
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
-            var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+            int choice;
+            if (!int.TryParse(Console.ReadLine(), out choice))
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                Console.WriteLine("Invalid input. Please enter a number.");
+                return;
             }
 
-            app.UseHttpsRedirection();
+            if (choice == 1)
+            {
+                foreach (var schedule in schedules)
+                {
+                    Console.WriteLine("");
+                    Console.WriteLine($"Class: {schedule.Class},\n Day: {schedule.Day},\n Subject: {schedule.Subject},\n Time: {schedule.Time},\n Professor: {schedule.Professor}");
+                }
+            }
+            else if (choice == 2)
+            {
+                Console.WriteLine("Enter Class: ");
+                string classInput = Console.ReadLine();
 
-            app.UseAuthorization();
+                Console.WriteLine("Enter Day: ");
+                string dayInput = Console.ReadLine();
 
+                Console.WriteLine("Enter Subject: ");
+                string subjectInput = Console.ReadLine();
 
-            app.MapControllers();
+                Console.WriteLine("Enter Time: ");
+                string timeInput = Console.ReadLine();
 
-            app.Run();
+                Console.WriteLine("Enter Professor: ");
+                string professorInput = Console.ReadLine();
+
+                bool result = services.AddSchedule(classInput, dayInput, subjectInput, timeInput, professorInput);
+
+                if (result)
+                {
+                    Console.WriteLine("Schedule added successfully!");
+                }
+                else
+                {
+                    Console.WriteLine("Failed to add schedule.");
+                }
+            }
+            else if (choice == 3)
+            {
+                Console.WriteLine("Enter Class: ");
+                string classInput = Console.ReadLine();
+
+                Console.WriteLine("Enter Subject: ");
+                string subjectInput = Console.ReadLine();
+
+                Console.WriteLine("Enter Professor: ");
+                string professorInput = Console.ReadLine();
+
+                // Call the DeleteSchedule method with the correct parameters
+                bool result = services.DeleteSchedule(classInput, subjectInput, professorInput);
+
+                if (result)
+                {
+                    Console.WriteLine("Schedule deleted successfully!");
+                }
+                else
+                {
+                    Console.WriteLine("Failed to delete schedule. No matching schedule found.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid choice.");
+            }
         }
     }
 }

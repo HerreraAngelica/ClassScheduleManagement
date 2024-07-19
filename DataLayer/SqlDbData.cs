@@ -10,9 +10,9 @@ namespace DataLayer
 {
     public class SqlDbData
     {
-        string connectionString = "Data Source=ANGELICA\\SQLEXPRESS02; Initial Catalog=ClassScheduleManagementSystem; Integrated Security=True;";
-        SqlConnection sqlConnection;
-
+        string connectionString //= "Data Source=ANGELICA\\SQLEXPRESS02; Initial Catalog=ClassScheduleManagementSystem; Integrated Security=True;";
+        = "Server=tcp:20.2.208.97,1433;Database=ClassScheduleManagementSystem; User Id=sa; Password=Angge10022003";
+            SqlConnection sqlConnection;
 
         public SqlDbData()
         {
@@ -37,13 +37,14 @@ namespace DataLayer
                 string Time = reader["Time"].ToString();
                 string Professor = reader["Professor"].ToString();
 
-
-                Schedule readUser = new Schedule();
-                readUser.Class = Class;
-                readUser.Day = Day;
-                readUser.Subject = Subject;
-                readUser.Time = Time;
-                readUser.Professor = Professor;
+                Schedule readUser = new Schedule
+                {
+                    Class = Class,
+                    Day = Day,
+                    Subject = Subject,
+                    Time = Time,
+                    Professor = Professor
+                };
 
                 sched.Add(readUser);
             }
@@ -64,15 +65,13 @@ namespace DataLayer
             insertCommand.Parameters.AddWithValue("@Professor", Professor);
 
             sqlConnection.Open();
-
             insertCommand.ExecuteNonQuery();
             sqlConnection.Close();
-
         }
 
         public void DeleteSchedule(string Class, string Subject, string Professor)
         {
-            string deleteStatement = "DELETE FROM Class WHERE Class = @Class AND Subject = @Subject  AND Professor = @Professor";
+            string deleteStatement = "DELETE FROM Class WHERE Class = @Class AND Subject = @Subject AND Professor = @Professor";
             SqlCommand deleteCommand = new SqlCommand(deleteStatement, sqlConnection);
 
             deleteCommand.Parameters.AddWithValue("@Class", Class);
@@ -80,11 +79,9 @@ namespace DataLayer
             deleteCommand.Parameters.AddWithValue("@Professor", Professor);
 
             sqlConnection.Open();
-
             deleteCommand.ExecuteNonQuery();
             sqlConnection.Close();
         }
-
 
         public List<Schedule> GetSchedulesForDay(string Day, string Subject, string Professor)
         {
@@ -116,23 +113,27 @@ namespace DataLayer
             sqlConnection.Close();
             return schedules;
         }
+
+        public void UpdateSchedule(string Class, string Day, string Subject, string Time, string Professor)
+        {
+            string updateStatement = "UPDATE Class SET Day = @Day, Subject = @Subject, Time = @Time, Professor = @Professor WHERE Class = @Class";
+            SqlCommand updateCommand = new SqlCommand(updateStatement, sqlConnection);
+
+            updateCommand.Parameters.AddWithValue("@Class", Class);
+            updateCommand.Parameters.AddWithValue("@Day", Day);
+            updateCommand.Parameters.AddWithValue("@Subject", Subject);
+            updateCommand.Parameters.AddWithValue("@Time", Time);
+            updateCommand.Parameters.AddWithValue("@Professor", Professor);
+
+            try
+            {
+                sqlConnection.Open();
+                updateCommand.ExecuteNonQuery();
+            }
+            finally
+            {
+                sqlConnection.Close();
+            }
+        }
     }
-
-
-
-    //    public  void UpdateSchedule(string Class, string Day)
-    //    {
-    //        string updateStatement = "UPDATE Class SET Day = @Day WHERE Class = @Class";
-    //        SqlCommand updateCommand = new SqlCommand(updateStatement, sqlConnection);
-
-    //        updateCommand.Parameters.AddWithValue("@Class", Class);
-    //        updateCommand.Parameters.AddWithValue("@Day", Day);
-    //        sqlConnection.Open();
-
-    //        updateCommand.ExecuteNonQuery();
-    //        sqlConnection.Close();
-    //    }
-
-
-
 }

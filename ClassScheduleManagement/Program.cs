@@ -10,28 +10,39 @@ namespace ClassScheduleManagement
     {
         static void Main(string[] args)
         {
-
+            //SqlDbData.Connect();
             Services services = new Services();
-            services.GetSchedules();
             List<Schedule> schedules = services.GetSchedules();
 
+            Console.WriteLine("");
+            Console.WriteLine("---------------------------------------------------------");
+            Console.WriteLine(">>>>>>>>BSIT 2-1 CLASS SCHEDULE MANAGEMENT SYSTEM<<<<<<<<");
+            Console.WriteLine("---------------------------------------------------------");
+            Console.WriteLine("");
             Console.WriteLine("Enter a number: ");
             Console.WriteLine("1. Display Schedule ");
             Console.WriteLine("2. Add Schedule ");
             Console.WriteLine("3. Delete Schedule ");
-            int choice = Convert.ToInt16(Console.ReadLine());
+            Console.WriteLine("");
+            Console.WriteLine("---------------------------------------------------------");
+
+            int choice;
+            if (!int.TryParse(Console.ReadLine(), out choice))
+            {
+                Console.WriteLine("Invalid input. Please enter a number.");
+                return;
+            }
 
             if (choice == 1)
             {
                 foreach (var schedule in schedules)
                 {
                     Console.WriteLine("");
-                    Console.WriteLine($"Class: {schedule.Class},\n Day: {schedule.Day},\n Day: {schedule.Professor}");
+                    Console.WriteLine($"Class: {schedule.Class},\n Day: {schedule.Day},\n Subject: {schedule.Subject},\n Time: {schedule.Time},\n Professor: {schedule.Professor}");
                 }
             }
             else if (choice == 2)
             {
-
                 Console.WriteLine("Enter Class: ");
                 string classInput = Console.ReadLine();
 
@@ -57,24 +68,20 @@ namespace ClassScheduleManagement
                 {
                     Console.WriteLine("Failed to add schedule.");
                 }
-
             }
             else if (choice == 3)
             {
                 Console.WriteLine("Enter Class: ");
-                string classInputs = Console.ReadLine();
-
-                Console.WriteLine("Enter Day: ");
-                string subjectInputs = Console.ReadLine();
+                string classInput = Console.ReadLine();
 
                 Console.WriteLine("Enter Subject: ");
-                string dayInputs = Console.ReadLine();
-
+                string subjectInput = Console.ReadLine();
 
                 Console.WriteLine("Enter Professor: ");
-                string professorInputs = Console.ReadLine();
+                string professorInput = Console.ReadLine();
 
-                bool result = services.DeleteSchedule(classInputs, dayInputs, subjectInputs, professorInputs);
+                // Call the DeleteSchedule method with the correct parameters
+                bool result = services.DeleteSchedule(classInput, subjectInput, professorInput);
 
                 if (result)
                 {
@@ -84,13 +91,11 @@ namespace ClassScheduleManagement
                 {
                     Console.WriteLine("Failed to delete schedule. No matching schedule found.");
                 }
-
             }
             else
             {
-                Console.WriteLine("Not a number");
+                Console.WriteLine("Invalid choice.");
             }
-
         }
     }
 }
