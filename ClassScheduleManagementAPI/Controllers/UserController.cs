@@ -8,7 +8,7 @@ namespace ClassSchedManagementAPI.Controllers
 {
     [ApiController]
     [Route("api/schedule")]
-    public class ScheduleController : Controller
+    public class ScheduleController : ControllerBase
     {
         private readonly Services _services;
 

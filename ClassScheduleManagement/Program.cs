@@ -10,7 +10,6 @@ namespace ClassScheduleManagement
     {
         static void Main(string[] args)
         {
-            //SqlDbData.Connect();
             Services services = new Services();
             List<Schedule> schedules = services.GetSchedules();
 
